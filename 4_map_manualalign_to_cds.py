@@ -30,7 +30,7 @@ def get_write_location(pos, fname, tree):
 for mpath in mapped_paths:
     fname = mpath.split("/")[-1]
     print(fname)
-    outname = f"{pathprefix}/{fname}_map_details.csv"
+    outname = f"{pathprefix}/{fname}_map_all.csv"
     with open(outname,"w") as outfile:
         outfile.write("locus_tag\tcds_start\tposition_mapped\tcds_end\tcds_strand\tcds_product\n")
     with open(mpath ,"r") as infile:
