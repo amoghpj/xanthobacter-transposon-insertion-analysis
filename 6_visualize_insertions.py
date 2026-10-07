@@ -100,6 +100,8 @@ pthresh = alpha/numgenes
 fc_pvals = df[["log2(|VSF|/|V0C4|)","-log10(p)"]].sort_values(by="-log10(p)", ascending=False)
 fc_cutoff = abs(fc_pvals[fc_pvals["-log10(p)"] > -np.log10(pthresh)]["log2(|VSF|/|V0C4|)"].values[-1])
 
+df = df.assign(is_significant_FWER = 0)
+df.loc[abs(df["log2(|VSF|/|V0C4|)"]) > fc_cutoff, "is_significant_FWER"] = 1
 high = df[df["|VSF|/|V0C4|"] > 2**fc_cutoff]
 low = df[df["|VSF|/|V0C4|"] < 2**(-fc_cutoff)]
 
@@ -290,5 +292,7 @@ plt.savefig(f"img/cent-hits-{suffix}_fdr_perstraincutoff.pdf")
 plt.savefig(f"img/cent-hits-{suffix}_fdr_perstraincutoff.png")
 plt.close("all")
 
+df = df.assign(is_significant_FDR = 0)
+df.loc[abs(df["log2(|VSF|/|V0C4|)"]) > fc_cutoff, "is_significant_FDR"] = 1
 
-df[["Locus tag","product","Log2(VSF/V0C4)","z","-log10(p)"]].to_csv(f"{pathprefix}/processed_insertions.csv",index=False)
+df[["Locus tag","product","Log2(VSF/V0C4)","z","-log10(p)","-log10(q)","is_significant_FWER","is_significant_FDR"]].to_csv(f"{pathprefix}/processed_insertions.csv",index=False)
